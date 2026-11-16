@@ -241,8 +241,21 @@ $('#install-x').addEventListener('click', () => {
 });
 
 // ---------- offline ----------
+// The app checks for updates every time it opens (when online) and reloads itself
+// onto the new version, so players never get stuck on an old copy.
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController && !reloading) { reloading = true; location.reload(); }
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then((reg) => {
+      const check = () => { if (navigator.onLine) reg.update().catch(() => {}); };
+      check();
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+    }).catch(() => {});
+  });
 }
 
 const live = GAMES.filter((g) => !g.soon);

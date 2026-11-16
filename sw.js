@@ -1,5 +1,5 @@
 // Caches the whole app (games + ads) so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v6';
+const CACHE = 'offline-arcade-v7';
 const FILES = [
   './',
   './index.html',
