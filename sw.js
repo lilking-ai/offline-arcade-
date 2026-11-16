@@ -1,5 +1,5 @@
 // Caches the whole app so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v3';
+const CACHE = 'offline-arcade-v4';
 const FILES = [
   './',
   './index.html',
@@ -7,6 +7,9 @@ const FILES = [
   './app.js',
   './manifest.webmanifest',
   './icons/icon.svg',
+  './icons/apple-touch-icon.png',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
   './games/xo.js',
   './games/connect4.js',
   './games/snake.js',

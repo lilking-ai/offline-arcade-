@@ -220,6 +220,17 @@ function updateNet() {
 window.addEventListener('online', updateNet);
 window.addEventListener('offline', updateNet);
 
+// ---------- install hint (iPhone/iPad Safari) ----------
+const standalone = window.navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let hintDismissed = false;
+try { hintDismissed = localStorage.getItem('oa-install-x') === '1'; } catch (e) {}
+if (ios && !standalone && !hintDismissed) $('#install').hidden = false;
+$('#install-x').addEventListener('click', () => {
+  $('#install').hidden = true;
+  try { localStorage.setItem('oa-install-x', '1'); } catch (e) {}
+});
+
 // ---------- offline ----------
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

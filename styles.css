@@ -51,6 +51,12 @@ body::after {
 .net { font-size: 12px; font-weight: 600; color: var(--muted); padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; }
 .net.off { color: var(--gold); border-color: rgba(255, 195, 77, 0.4); }
 
+/* install hint */
+.install { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; margin-bottom: 14px; border-radius: 16px; background: rgba(59, 123, 255, 0.15); border: 1px solid rgba(59, 123, 255, 0.4); font-size: 14px; color: var(--text); }
+.install[hidden] { display: none; }
+.install span { flex: 1; }
+.install .icon-btn { width: 36px; height: 36px; border: none; background: none; }
+
 /* hero */
 .hero {
   position: relative; overflow: hidden; border-radius: 26px; min-height: 230px;
