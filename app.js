@@ -172,8 +172,17 @@ function showAd() {
   media.innerHTML = '';
   if (ad && ad.type === 'video') {
     const v = document.createElement('video');
-    Object.assign(v, { src: `ads/${ad.src}`, autoplay: true, muted: true, loop: true, playsInline: true });
+    Object.assign(v, { src: `ads/${ad.src}`, playsInline: true, loop: true });
+    v.setAttribute('playsinline', '');
     media.appendChild(v);
+    // try with sound first; phones may block that, so fall back to muted with a sound button
+    const snd = document.createElement('button');
+    snd.className = 'ad-sound';
+    snd.type = 'button';
+    const setIcon = () => { snd.textContent = v.muted ? 'Tap for sound' : 'Sound on'; };
+    snd.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); v.muted = !v.muted; v.play().catch(() => {}); setIcon(); });
+    media.appendChild(snd);
+    v.play().then(setIcon).catch(() => { v.muted = true; setIcon(); v.play().catch(() => {}); });
   } else if (ad) {
     const img = document.createElement('img');
     img.src = `ads/${ad.src}`;

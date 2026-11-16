@@ -1,5 +1,5 @@
-// Caches the whole app so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v4';
+// Caches the whole app (games + ads) so it works with no internet after the first visit.
+const CACHE = 'offline-arcade-v5';
 const FILES = [
   './',
   './index.html',
@@ -10,39 +10,19 @@ const FILES = [
   './icons/apple-touch-icon.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './games/xo.js',
-  './games/connect4.js',
-  './games/snake.js',
-  './games/util.js',
-  './games/checkers.js',
-  './games/pong.js',
-  './games/football.js',
-  './games/dots.js',
-  './games/memory.js',
-  './games/reaction.js',
-  './games/g2048.js',
-  './games/minesweeper.js',
-  './games/sudoku.js',
-  './games/maze.js',
-  './games/words.js',
-  './games/simon.js',
-  './games/chess.js',
-  './games/ludo.js',
-  './games/gomoku.js',
-  './games/mancala.js',
-  './games/rps.js',
-  './games/flappy.js',
-  './games/breakout.js',
-  './games/whack.js',
-  './games/hangman.js',
-  './games/puzzle15.js',
-  './games/lightsout.js',
-  './games/hanoi.js',
   './ads/ads.js',
+  ...['util', 'xo', 'connect4', 'snake', 'checkers', 'pong', 'football', 'dots', 'memory', 'reaction',
+    'g2048', 'minesweeper', 'sudoku', 'maze', 'words', 'simon', 'chess', 'ludo', 'gomoku', 'mancala',
+    'rps', 'flappy', 'breakout', 'whack', 'hangman', 'puzzle15', 'lightsout', 'hanoi'].map((g) => `./games/${g}.js`),
 ];
+const ADS = ['volt-1', 'volt-2', 'volt-3', 'kettlecrow-coffee', 'fizzr-energy', 'loopa-app'].map((a) => `./ads/${a}.mp4`);
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE)
+      .then((c) => c.addAll(FILES).then(() => Promise.all(ADS.map((a) => c.add(a).catch(() => {})))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (e) => {
@@ -53,9 +33,28 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// iPhone/iPad Safari asks for videos in pieces ("Range" requests), so answer those from the cache too.
+async function rangeResponse(request, cached) {
+  const buf = await cached.arrayBuffer();
+  const m = /bytes=(\d*)-(\d*)/.exec(request.headers.get('range') || '');
+  const start = m && m[1] ? Number(m[1]) : 0;
+  const end = m && m[2] ? Math.min(Number(m[2]), buf.byteLength - 1) : buf.byteLength - 1;
+  return new Response(buf.slice(start, end + 1), {
+    status: 206,
+    headers: {
+      'Content-Type': cached.headers.get('Content-Type') || 'video/mp4',
+      'Content-Range': `bytes ${start}-${end}/${buf.byteLength}`,
+      'Content-Length': String(end - start + 1),
+      'Accept-Ranges': 'bytes',
+    },
+  });
+}
+
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request))
-  );
+  e.respondWith((async () => {
+    const cached = await caches.match(e.request, { ignoreSearch: true });
+    if (cached && e.request.headers.has('range')) return rangeResponse(e.request, cached);
+    return cached || fetch(e.request);
+  })());
 });

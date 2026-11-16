@@ -133,6 +133,8 @@ body::after {
 .ad-timer { min-width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--text); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text); }
 .ad-media { flex: 1; min-height: 0; border-radius: 16px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--muted); }
 .ad-media img, .ad-media video { width: 100%; height: 100%; object-fit: contain; }
+.ad-media { position: relative; }
+.ad-sound { position: absolute; right: 10px; bottom: 10px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.6); color: #fff; font-weight: 700; cursor: pointer; }
 .ad-empty { text-align: center; font-size: 22px; font-weight: 800; }
 .ad-empty small { font-size: 13px; font-weight: 500; }
 .ad-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }

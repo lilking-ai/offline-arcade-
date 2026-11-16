@@ -14,6 +14,12 @@ export const AD_SECONDS = 30;
 export const ROUNDS_BETWEEN_ADS = 3;
 
 export const ADS = [
-  // { type: 'video', src: 'ad1.mp4', link: 'https://example.com' },
-  // { type: 'image', src: 'ad2.jpg', link: 'https://example.com' },
+  { type: 'video', src: 'volt-1.mp4' },
+  { type: 'video', src: 'kettlecrow-coffee.mp4' },
+  { type: 'video', src: 'volt-2.mp4' },
+  { type: 'video', src: 'fizzr-energy.mp4' },
+  { type: 'video', src: 'volt-3.mp4' },
+  { type: 'video', src: 'loopa-app.mp4' },
+  // Add a link so tapping the ad opens a website, e.g.
+  // { type: 'video', src: 'volt-1.mp4', link: 'https://volt.example.com' },
 ];
