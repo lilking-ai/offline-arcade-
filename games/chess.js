@@ -1,6 +1,16 @@
 // Chess: 2 players on one phone, or vs a simple CPU. Full rules: castling, en passant,
 // promotion (to queen), check, checkmate and stalemate.
-const GLYPH = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+// Pieces are drawn as SVG (not text symbols), so iPhone/iPad don't turn them into emoji.
+const BASE = '<path d="M11 39 h23 a2 2 0 0 0 2 -2 v-1 a3 3 0 0 0 -3 -3 h-21 a3 3 0 0 0 -3 3 v1 a2 2 0 0 0 2 2 z"/>';
+const SHAPES = {
+  p: `<circle cx="22.5" cy="13" r="5"/><path d="M18 19 h9 l2 4 h-2 l2 10 h-13 l2 -10 h-2 z"/>${BASE}`,
+  r: `<path d="M12 9 h4 v3 h3 v-3 h7 v3 h3 v-3 h4 v8 l-3 3 v10 l3 3 h-21 l3 -3 v-10 l-3 -3 z"/>${BASE}`,
+  n: `<path d="M14 33 c0 -6 3 -9 7 -12 l-6 2 c-2 1 -4 0 -4 -2 l7 -9 c1 -3 3 -5 6 -5 l1 -2 l2 3 c6 2 9 8 9 15 v10 z"/><circle cx="20" cy="13" r="1.4" class="eye"/>${BASE}`,
+  b: `<circle cx="22.5" cy="7" r="2.5"/><path d="M22.5 9 c-6 4 -8 9 -6 14 l-2 3 l3 2 h11 l3 -2 l-2 -3 c2 -5 0 -10 -6 -14 z"/><path d="M15 33 l3 -5 h9 l3 5 z"/><path d="M20 17 l5 -5" class="cut"/>${BASE}`,
+  q: `<circle cx="9" cy="11" r="2.5"/><circle cx="16" cy="8" r="2.5"/><circle cx="22.5" cy="7" r="2.5"/><circle cx="29" cy="8" r="2.5"/><circle cx="36" cy="11" r="2.5"/><path d="M9 13 l4 17 h19 l4 -17 l-6 9 l-1 -12 l-5 11 l-2 -12 l-2 12 l-5 -11 l-1 12 z"/><path d="M13 30 h19 l-1 3 h-17 z"/>${BASE}`,
+  k: `<path d="M21 3 h3 v3 h3 v3 h-3 v4 h-3 v-4 h-3 v-3 h3 z"/><path d="M22.5 13 c-4 0 -6 3 -5 6 c-4 -3 -10 -1 -9 4 c1 4 4 6 5 8 h18 c1 -2 4 -4 5 -8 c1 -5 -5 -7 -9 -4 c1 -3 -1 -6 -5 -6 z"/><path d="M13 31 h19 l-1 2 h-17 z"/>${BASE}`,
+};
+const piece = (t, white) => `<svg class="cp ${white ? 'w' : 'b'}" viewBox="0 0 45 45" aria-hidden="true">${SHAPES[t]}</svg>`;
 const VALUE = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
 function initial() {
@@ -202,11 +212,11 @@ export function mount(stage, { roundOver }) {
         (i === sel ? ' sel' : '') + (targets.includes(i) ? (p ? ' hit' : ' target') : '') +
         (last && (i === last.from || i === last.to) ? ' last' : '') +
         (check && p && p.t === 'k' && p.w === s.white ? ' check' : '');
-      btn.innerHTML = p ? `<span class="cp ${p.w ? 'w' : 'b'}">${GLYPH[p.t]}</span>` : '';
+      btn.innerHTML = p ? piece(p.t, p.w) : '';
       btn.setAttribute('aria-label', `${'abcdefgh'[c]}${8 - r}${p ? ` ${p.w ? 'white' : 'black'} ${{ k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' }[p.t]}` : ''}`);
     });
-    el('capW').innerHTML = lost.b.map((t) => `<span class="cp b">${GLYPH[t]}</span>`).join('');
-    el('capB').innerHTML = lost.w.map((t) => `<span class="cp w">${GLYPH[t]}</span>`).join('');
+    el('capW').innerHTML = lost.b.map((t) => piece(t, false)).join('');
+    el('capB').innerHTML = lost.w.map((t) => piece(t, true)).join('');
     const side = s.white ? 'White' : mode === 'cpu' ? 'CPU' : 'Black';
     el('status').textContent = over
       ? check ? `Checkmate! ${s.white ? (mode === 'cpu' ? 'CPU' : 'Black') : 'White'} wins` : 'Stalemate: draw'

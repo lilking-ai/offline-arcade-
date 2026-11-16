@@ -294,11 +294,14 @@ body::after {
 .chess .target::after { content: ""; width: 26%; height: 26%; border-radius: 50%; background: rgba(0,0,0,.35); }
 .chess .hit { box-shadow: inset 0 0 0 4px rgba(255,77,94,.8); }
 .chess .check { background: radial-gradient(circle, #ff4d5e 20%, #8a1420 80%) !important; }
-.cp { font-size: min(9vw, 40px); line-height: 1; }
-.cp.w { color: #fffdf6; text-shadow: 0 0 2px #000, 0 1px 0 #000, 0 2px 4px rgba(0,0,0,.6); }
-.cp.b { color: #15151a; text-shadow: 0 0 1px #fff8; }
+.cp { width: 88%; height: 88%; stroke-width: 1.6; stroke-linejoin: round; filter: drop-shadow(0 2px 2px rgba(0,0,0,.45)); }
+.cp.w { fill: #fbf8f0; stroke: #1a1a20; }
+.cp.b { fill: #22222a; stroke: #e8e4da; }
+.cp .eye { fill: currentColor; stroke: none; }
+.cp.w .eye { fill: #1a1a20; } .cp.b .eye { fill: #e8e4da; }
+.cp .cut { fill: none; }
 .captured { min-height: 26px; display: flex; flex-wrap: wrap; gap: 2px; }
-.captured .cp { font-size: 22px; }
+.captured .cp { width: 24px; height: 24px; }
 
 /* ---------- Ludo ---------- */
 .ludo { display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); aspect-ratio: 1; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: #11121b; box-shadow: 0 30px 60px -20px rgba(0,0,0,.9); }
