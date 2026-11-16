@@ -1,5 +1,2 @@
 node_modules/
-dist/
-renderer/bundle.js
-renderer/assets/
-build/
+.DS_Store
