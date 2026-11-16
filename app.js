@@ -1,4 +1,5 @@
 // Offline Arcade — hub, routing, ads and offline support.
+import { ADS, AD_SECONDS, ROUNDS_BETWEEN_ADS } from './ads/ads.js';
 
 const art = (bg, svg) =>
   `background:${bg};` +
@@ -21,10 +22,10 @@ const GAMES = [
     style: art('radial-gradient(circle at 60% 40%, #0f3d2a, #0d0e16 70%)',
       `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><path d='M30 160 H90 V90 H150 V50' fill='none' stroke='#38e08a' stroke-width='18' stroke-linejoin='round' stroke-linecap='round'/><circle cx='150' cy='130' r='9' fill='#ff6a2b'/></svg>`),
   },
-  { id: 'chess', name: 'Chess', tag: 'Coming soon', filters: ['2p', 'board'], soon: true,
+  { id: 'chess', name: 'Chess', tag: '2 players · vs CPU', filters: ['2p', 'solo', 'board'],
     style: art('radial-gradient(circle at 50% 30%, #2b2b36, #0d0e16 70%)',
       `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><path d='M70 170 h70 l-6 -22 q16 -12 12 -34 l-12 -12 q8 -12 -4 -20 l-16 4 -24 24 q-8 12 4 20 l16 -8 q-12 16 -10 26 z' fill='#e8e6e1'/></svg>`) },
-  { id: 'ludo', name: 'Ludo', tag: 'Coming soon', filters: ['2p', 'board'], soon: true,
+  { id: 'ludo', name: 'Ludo', tag: '2–4 players', filters: ['2p', 'board'],
     style: art('radial-gradient(circle at 50% 30%, #3a2a05, #0d0e16 70%)',
       `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='55' y='55' width='90' height='90' rx='18' fill='#f3f1ec'/><circle cx='78' cy='78' r='9' fill='#111'/><circle cx='122' cy='78' r='9' fill='#111'/><circle cx='100' cy='100' r='9' fill='#111'/><circle cx='78' cy='122' r='9' fill='#111'/><circle cx='122' cy='122' r='9' fill='#111'/></svg>`) },
   { id: 'football', name: 'Football', tag: '2 players · vs CPU', filters: ['2p', 'solo'],
@@ -63,6 +64,36 @@ const GAMES = [
   { id: 'simon', name: 'Simon', tag: 'Solo · memory', filters: ['solo', 'puzzle'],
     style: art('radial-gradient(circle at 50% 30%, #2a1408, #0d0e16 70%)',
       `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='45' y='45' width='52' height='52' rx='14' fill='#ff6a2b'/><rect x='103' y='45' width='52' height='52' rx='14' fill='#3b7bff' opacity='.4'/><rect x='45' y='103' width='52' height='52' rx='14' fill='#ffc34d' opacity='.4'/><rect x='103' y='103' width='52' height='52' rx='14' fill='#38e08a' opacity='.4'/></svg>`) },
+  { id: 'gomoku', name: 'Five in a Row', tag: '2 players · vs CPU', filters: ['2p', 'solo', 'board'],
+    style: art('radial-gradient(circle at 50% 30%, #4a3416, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>${[0, 1, 2, 3, 4].map(i => `<circle cx='${50 + i * 25}' cy='${50 + i * 25}' r='11' fill='#ff6a2b'/>`).join('')}<circle cx='150' cy='60' r='11' fill='#3b7bff'/><circle cx='60' cy='150' r='11' fill='#3b7bff'/></svg>`) },
+  { id: 'mancala', name: 'Mancala', tag: '2 players · vs CPU', filters: ['2p', 'solo', 'board'],
+    style: art('radial-gradient(circle at 50% 30%, #4a2a10, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='25' y='70' width='150' height='90' rx='40' fill='#5a3a1c'/>${[0, 1, 2].map(i => `<circle cx='${70 + i * 30}' cy='97' r='11' fill='#1e1208'/><circle cx='${70 + i * 30}' cy='133' r='11' fill='#1e1208'/>`).join('')}<circle cx='70' cy='97' r='4' fill='#ffc34d'/><circle cx='100' cy='133' r='4' fill='#ff6a2b'/></svg>`) },
+  { id: 'rps', name: 'Rock Paper Scissors', tag: '2 players · vs CPU', filters: ['2p', 'solo'],
+    style: art('radial-gradient(circle at 50% 30%, #2a1408, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><circle cx='70' cy='90' r='30' fill='#ff6a2b'/><rect x='110' y='60' width='50' height='64' rx='6' fill='#f3f1ec'/><path d='M80 180 L130 130 M120 180 L70 130' stroke='#3b7bff' stroke-width='12' stroke-linecap='round'/></svg>`) },
+  { id: 'flappy', name: 'Flappy', tag: 'Solo · high score', filters: ['solo'],
+    style: art('radial-gradient(circle at 50% 30%, #2a1a40, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='130' y='0' width='40' height='80' rx='8' fill='#2a5ad0'/><rect x='130' y='150' width='40' height='100' rx='8' fill='#2a5ad0'/><circle cx='80' cy='115' r='22' fill='#ffc34d'/><circle cx='88' cy='108' r='4' fill='#111'/><path d='M100 113 l14 5 -14 5 z' fill='#ff6a2b'/></svg>`) },
+  { id: 'breakout', name: 'Breakout', tag: '100 levels', filters: ['solo'], levels: 100,
+    style: art('radial-gradient(circle at 50% 30%, #2e0a12, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>${['#ff4d5e', '#ff6a2b', '#ffc34d', '#38e08a'].map((c, r) => [0, 1, 2, 3].map(k => `<rect x='${30 + k * 36}' y='${40 + r * 20}' width='32' height='14' rx='3' fill='${c}'/>`).join('')).join('')}<circle cx='110' cy='150' r='8' fill='#fff'/><rect x='70' y='190' width='70' height='10' rx='5' fill='#ff8a4f'/></svg>`) },
+  { id: 'whack', name: 'Whack-a-Mole', tag: 'Solo · 30 seconds', filters: ['solo'],
+    style: art('radial-gradient(circle at 50% 30%, #3a2614, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><ellipse cx='100' cy='160' rx='60' ry='18' fill='#050508'/><path d='M65 160 q0 -70 35 -70 q35 0 35 70 z' fill='#a06a45'/><circle cx='88' cy='115' r='5' fill='#111'/><circle cx='112' cy='115' r='5' fill='#111'/><ellipse cx='100' cy='130' rx='9' ry='6' fill='#ff7ab6'/></svg>`) },
+  { id: 'hangman', name: 'Hangman', tag: '120 words', filters: ['solo', 'puzzle'], levels: 120,
+    style: art('radial-gradient(circle at 50% 30%, #1d1d2e, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><path d='M40 190 H130 M70 190 V40 H140 V60' stroke='#5a5a6e' stroke-width='8' fill='none' stroke-linecap='round'/><g stroke='#ff6a2b' stroke-width='7' fill='none' stroke-linecap='round'><circle cx='140' cy='78' r='18'/><path d='M140 96 V140 M140 108 L120 126 M140 108 L160 126'/></g></svg>`) },
+  { id: 'puzzle15', name: 'Sliding Puzzle', tag: '300 levels', filters: ['solo', 'puzzle'], levels: 300,
+    style: art('radial-gradient(circle at 50% 30%, #2a1408, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>${[1, 2, 3, 4, 5, 6, 7, 8, 0].map((t, i) => t ? `<rect x='${40 + (i % 3) * 42}' y='${45 + Math.floor(i / 3) * 42}' width='38' height='38' rx='7' fill='${t === i + 1 ? '#ff6a2b' : '#3a3a4a'}'/><text x='${59 + (i % 3) * 42}' y='${71 + Math.floor(i / 3) * 42}' font-family='sans-serif' font-weight='900' font-size='18' fill='#fff' text-anchor='middle'>${t}</text>` : '').join('')}</svg>`) },
+  { id: 'lightsout', name: 'Lights Out', tag: '300 levels', filters: ['solo', 'puzzle'], levels: 300,
+    style: art('radial-gradient(circle at 50% 30%, #3a2a05, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>${[...Array(16).keys()].map(i => `<rect x='${40 + (i % 4) * 31}' y='${45 + Math.floor(i / 4) * 31}' width='27' height='27' rx='6' fill='${[1, 4, 5, 6, 9, 14].includes(i) ? '#ffc34d' : '#1c1d28'}'/>`).join('')}</svg>`) },
+  { id: 'hanoi', name: 'Tower of Hanoi', tag: '8 levels · 3–10 discs', filters: ['solo', 'puzzle'], levels: 8,
+    style: art('radial-gradient(circle at 50% 30%, #1d1d2e, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='97' y='50' width='6' height='130' rx='3' fill='#5a5a6e'/><rect x='60' y='160' width='80' height='18' rx='9' fill='#3b7bff'/><rect x='70' y='138' width='60' height='18' rx='9' fill='#38e08a'/><rect x='80' y='116' width='40' height='18' rx='9' fill='#ffc34d'/><rect x='88' y='94' width='24' height='18' rx='9' fill='#ff6a2b'/></svg>`) },
 ];
 
 const $ = (s) => document.querySelector(s);
@@ -123,18 +154,58 @@ $('#back').addEventListener('click', () => history.back());
 window.addEventListener('popstate', () => { if (gameScreen.classList.contains('active')) closeGame(); });
 
 // ---------- ads ----------
-// Ads only show when the device is online. Swap the placeholders below for a real
-// ad network (e.g. AdSense for web, AdMob if you wrap this as an Android app).
-const ONLINE_ADS_EVERY = 3; // interstitial after every 3 finished rounds
+// Full-screen ads come from ads/ads.js and run for AD_SECONDS, no skipping.
+// Because the ad files live inside the app, they also play offline.
+let adIndex = 0, adTimer = null;
 
 function roundOver() {
   roundsSinceAd++;
-  if (navigator.onLine && roundsSinceAd >= ONLINE_ADS_EVERY) {
+  if (roundsSinceAd >= ROUNDS_BETWEEN_ADS) {
     roundsSinceAd = 0;
-    setTimeout(() => { $('#interstitial').hidden = false; }, 900);
+    setTimeout(showAd, 900);
   }
 }
-$('#close-ad').addEventListener('click', () => { $('#interstitial').hidden = true; });
+
+function showAd() {
+  const ad = ADS.length ? ADS[adIndex++ % ADS.length] : null;
+  const media = $('#ad-media');
+  media.innerHTML = '';
+  if (ad && ad.type === 'video') {
+    const v = document.createElement('video');
+    Object.assign(v, { src: `ads/${ad.src}`, autoplay: true, muted: true, loop: true, playsInline: true });
+    media.appendChild(v);
+  } else if (ad) {
+    const img = document.createElement('img');
+    img.src = `ads/${ad.src}`;
+    img.alt = 'Advertisement';
+    media.appendChild(img);
+  } else {
+    media.innerHTML = '<p class="ad-empty">Your ad here<br><small>Add ad files in ads/ads.js</small></p>';
+  }
+  if (ad && ad.link) media.href = ad.link; else media.removeAttribute('href');
+
+  const btn = $('#close-ad');
+  let left = AD_SECONDS;
+  btn.disabled = true;
+  $('#interstitial').hidden = false;
+  const tick = () => {
+    $('#ad-timer').textContent = left;
+    $('#ad-progress').style.width = `${((AD_SECONDS - left) / AD_SECONDS) * 100}%`;
+    btn.textContent = left > 0 ? `Continue in ${left}s` : 'Continue';
+    btn.disabled = left > 0;
+    if (left <= 0) clearInterval(adTimer);
+    left--;
+  };
+  clearInterval(adTimer);
+  tick();
+  adTimer = setInterval(tick, 1000);
+}
+
+$('#close-ad').addEventListener('click', () => {
+  if ($('#close-ad').disabled) return;
+  $('#interstitial').hidden = true;
+  $('#ad-media').innerHTML = '';
+});
 
 function updateNet() {
   const online = navigator.onLine;

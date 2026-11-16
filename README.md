@@ -11,9 +11,9 @@ It's a Progressive Web App (PWA): open it once while online, then it keeps worki
 | XO | 2 players / vs CPU | ✅ |
 | Connect 4 | 2 players | ✅ |
 | Snake | Solo, saves best score | ✅ |
-| Chess | 2 players | Coming soon |
-| Ludo | 2–4 players | Coming soon |
-| Football | 2 players | Coming soon |
+| Chess | 2 players / vs CPU | ✅ |
+| Ludo | 2–4 players | ✅ |
+| Football | 2 players / vs CPU | ✅ |
 
 ## Run it locally
 
@@ -27,12 +27,13 @@ Then open the address it prints. Service workers need `http://localhost` or HTTP
 
 ## Ads
 
-Ads only show while the device is online:
+Full-screen ads show after every 3 finished rounds and **run for 30 seconds. Players can't skip them.**
 
-- **Banner** at the bottom of the game list (`.ad-slot[data-ad="banner"]`)
-- **Full-screen ad** after every 3 finished rounds (`ONLINE_ADS_EVERY` in `app.js`)
+To add your own ads:
+1. Put your ad files (`.mp4`, `.jpg`, `.png`) in the `ads/` folder.
+2. List them in `ads/ads.js`, for example `{ type: 'video', src: 'ad1.mp4', link: 'https://your-site.com' }`.
 
-Both are placeholders for now. To earn money, plug in AdSense (web) or wrap the app for Android and use AdMob.
+Change `AD_SECONDS` or `ROUNDS_BETWEEN_ADS` in `ads/ads.js` to adjust. Ads are stored inside the app, so they play offline too.
 
 ## Add a game
 

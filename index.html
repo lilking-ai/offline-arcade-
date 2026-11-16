@@ -64,11 +64,15 @@
   </section>
 
   <!-- INTERSTITIAL AD -->
-  <div id="interstitial" class="interstitial" hidden>
+  <div id="interstitial" class="interstitial" hidden role="dialog" aria-label="Advertisement">
     <div class="ad-full">
-      <span class="ad-tag">AD</span>
-      <p>Your ad here</p>
-      <button class="btn" id="close-ad">Continue</button>
+      <div class="ad-top">
+        <span class="ad-tag">AD</span>
+        <span class="ad-timer" id="ad-timer">30</span>
+      </div>
+      <a id="ad-media" class="ad-media" target="_blank" rel="noopener"></a>
+      <div class="ad-bar"><div id="ad-progress"></div></div>
+      <button class="btn primary" id="close-ad" disabled>Continue in 30s</button>
     </div>
   </div>
 
