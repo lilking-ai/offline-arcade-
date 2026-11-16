@@ -1,0 +1,14 @@
+{
+  "name": "Offline Arcade",
+  "short_name": "Arcade",
+  "description": "Classic games you can play with no internet, solo or with up to 4 friends on one phone.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07080d",
+  "theme_color": "#07080d",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
