@@ -1,5 +1,5 @@
 // Caches the whole app so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v1';
+const CACHE = 'offline-arcade-v2';
 const FILES = [
   './',
   './index.html',
@@ -10,6 +10,19 @@ const FILES = [
   './games/xo.js',
   './games/connect4.js',
   './games/snake.js',
+  './games/util.js',
+  './games/checkers.js',
+  './games/pong.js',
+  './games/football.js',
+  './games/dots.js',
+  './games/memory.js',
+  './games/reaction.js',
+  './games/g2048.js',
+  './games/minesweeper.js',
+  './games/sudoku.js',
+  './games/maze.js',
+  './games/words.js',
+  './games/simon.js',
 ];
 
 self.addEventListener('install', (e) => {

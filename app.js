@@ -27,9 +27,42 @@ const GAMES = [
   { id: 'ludo', name: 'Ludo', tag: 'Coming soon', filters: ['2p', 'board'], soon: true,
     style: art('radial-gradient(circle at 50% 30%, #3a2a05, #0d0e16 70%)',
       `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='55' y='55' width='90' height='90' rx='18' fill='#f3f1ec'/><circle cx='78' cy='78' r='9' fill='#111'/><circle cx='122' cy='78' r='9' fill='#111'/><circle cx='100' cy='100' r='9' fill='#111'/><circle cx='78' cy='122' r='9' fill='#111'/><circle cx='122' cy='122' r='9' fill='#111'/></svg>`) },
-  { id: 'football', name: 'Football', tag: 'Coming soon', filters: ['2p'], soon: true,
+  { id: 'football', name: 'Football', tag: '2 players · vs CPU', filters: ['2p', 'solo'],
     style: art('radial-gradient(circle at 50% 30%, #0e3a1a, #0d0e16 70%)',
-      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><circle cx='100' cy='100' r='46' fill='#f3f1ec'/><path d='M100 80 l18 13 -7 21 h-22 l-7 -21 z' fill='#111'/></svg>`) },
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='40' y='30' width='120' height='170' rx='6' fill='none' stroke='rgba(255,255,255,.35)' stroke-width='4'/><line x1='40' y1='115' x2='160' y2='115' stroke='rgba(255,255,255,.35)' stroke-width='4'/><circle cx='100' cy='100' r='26' fill='#f3f1ec'/><path d='M100 88 l11 8 -4 13 h-14 l-4 -13 z' fill='#111'/><circle cx='70' cy='160' r='16' fill='#ff6a2b'/></svg>`) },
+  { id: 'checkers', name: 'Checkers', tag: '2 players', filters: ['2p', 'board'],
+    style: art('radial-gradient(circle at 50% 30%, #3a1a0a, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><circle cx='80' cy='95' r='30' fill='#ff6a2b'/><circle cx='80' cy='88' r='30' fill='#ff8a4f'/><circle cx='125' cy='140' r='30' fill='#1a3ea8'/><circle cx='125' cy='133' r='30' fill='#3b7bff'/><circle cx='125' cy='133' r='18' fill='none' stroke='#ffc34d' stroke-width='5'/></svg>`) },
+  { id: 'pong', name: 'Pong', tag: '2 players · vs CPU', filters: ['2p', 'solo'],
+    style: art('radial-gradient(circle at 50% 50%, #1b1b30, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='60' y='40' width='80' height='12' rx='6' fill='#3b7bff'/><rect x='60' y='170' width='80' height='12' rx='6' fill='#ff6a2b'/><circle cx='118' cy='105' r='10' fill='#fff'/><line x1='30' y1='112' x2='170' y2='112' stroke='rgba(255,255,255,.2)' stroke-width='3' stroke-dasharray='8 8'/></svg>`) },
+  { id: 'dots', name: 'Dots & Boxes', tag: '2 players', filters: ['2p', 'board'],
+    style: art('radial-gradient(circle at 40% 30%, #2a1408, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='55' y='55' width='45' height='45' fill='rgba(255,106,43,.35)'/><rect x='100' y='100' width='45' height='45' fill='rgba(59,123,255,.35)'/><path d='M55 55 h45 v45 h-45 z' fill='none' stroke='#ff6a2b' stroke-width='6'/><path d='M100 100 h45 v45 h-45 z' fill='none' stroke='#3b7bff' stroke-width='6'/>${[55, 100, 145].map(x => [55, 100, 145].map(y => `<circle cx='${x}' cy='${y}' r='7' fill='#f3f1ec'/>`).join('')).join('')}</svg>`) },
+  { id: 'memory', name: 'Memory', tag: 'Solo · 2 players', filters: ['2p', 'solo', 'puzzle'],
+    style: art('radial-gradient(circle at 50% 30%, #2a0f2e, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='40' y='50' width='55' height='75' rx='10' fill='#1b1c28' stroke='#ff6a2b' stroke-width='3'/><rect x='105' y='50' width='55' height='75' rx='10' fill='#171824'/><circle cx='132' cy='87' r='16' fill='#c26bff'/><rect x='40' y='135' width='55' height='75' rx='10' fill='#171824'/><circle cx='67' cy='172' r='16' fill='#c26bff'/><rect x='105' y='135' width='55' height='75' rx='10' fill='#1b1c28' stroke='#ff6a2b' stroke-width='3'/></svg>`) },
+  { id: 'reaction', name: 'Reaction Duel', tag: '2 players · fastest finger', filters: ['2p'],
+    style: art('radial-gradient(circle at 50% 50%, #0f3d2a, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><path d='M110 30 L60 130 H100 L85 210 L145 100 H105 Z' fill='#38e08a'/></svg>`) },
+  { id: 'g2048', name: '2048', tag: 'Solo · high score', filters: ['solo', 'puzzle'],
+    style: art('radial-gradient(circle at 50% 30%, #3a1a05, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='45' y='50' width='50' height='50' rx='10' fill='#ff6a2b'/><rect x='105' y='50' width='50' height='50' rx='10' fill='#ffc34d'/><rect x='45' y='110' width='50' height='50' rx='10' fill='#383848'/><rect x='105' y='110' width='50' height='50' rx='10' fill='#6b4dff'/><text x='130' y='143' font-family='sans-serif' font-weight='900' font-size='20' fill='#fff' text-anchor='middle'>2048</text></svg>`) },
+  { id: 'minesweeper', name: 'Minesweeper', tag: 'Solo · 3 sizes', filters: ['solo', 'puzzle'],
+    style: art('radial-gradient(circle at 50% 30%, #2e0a12, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><circle cx='100' cy='110' r='34' fill='#f3f1ec'/><g stroke='#f3f1ec' stroke-width='8' stroke-linecap='round'><path d='M100 60 v-12 M100 160 v12 M50 110 h-12 M150 110 h12 M66 76 l-9 -9 M134 144 l9 9 M134 76 l9 -9 M66 144 l-9 9'/></g><circle cx='90' cy='100' r='8' fill='#ff4d5e'/></svg>`) },
+  { id: 'sudoku', name: 'Sudoku', tag: '500 levels', filters: ['solo', 'puzzle'], levels: 500,
+    style: art('radial-gradient(circle at 50% 30%, #121f44, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='40' y='45' width='120' height='120' rx='8' fill='none' stroke='#5a5a6e' stroke-width='4'/><path d='M80 45 v120 M120 45 v120 M40 85 h120 M40 125 h120' stroke='#5a5a6e' stroke-width='3'/><g font-family='sans-serif' font-weight='900' font-size='26' text-anchor='middle'><text x='60' y='75' fill='#f3f1ec'>5</text><text x='100' y='115' fill='#6197ff'>3</text><text x='140' y='155' fill='#ff6a2b'>9</text></g></svg>`) },
+  { id: 'maze', name: 'Maze', tag: '500 levels', filters: ['solo', 'puzzle'], levels: 500,
+    style: art('radial-gradient(circle at 50% 30%, #0f1e48, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><path d='M40 40 H160 V170 H40 Z M70 40 V100 H110 M130 70 V140 H70 M40 130 H100' fill='none' stroke='#3b7bff' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='55' cy='155' r='9' fill='#ff6a2b'/></svg>`) },
+  { id: 'words', name: 'Word Guess', tag: '150+ words', filters: ['solo', 'puzzle'], levels: 150,
+    style: art('radial-gradient(circle at 50% 30%, #1d2a12, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'>${'GAMES'.split('').map((ch, i) => `<rect x='${22 + i * 32}' y='90' width='28' height='28' rx='5' fill='${['#2e9e5b', '#c99a1a', '#2a2a36', '#2e9e5b', '#2e9e5b'][i]}'/><text x='${36 + i * 32}' y='111' font-family='sans-serif' font-weight='900' font-size='18' fill='#fff' text-anchor='middle'>${ch}</text>`).join('')}</svg>`) },
+  { id: 'simon', name: 'Simon', tag: 'Solo · memory', filters: ['solo', 'puzzle'],
+    style: art('radial-gradient(circle at 50% 30%, #2a1408, #0d0e16 70%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='45' y='45' width='52' height='52' rx='14' fill='#ff6a2b'/><rect x='103' y='45' width='52' height='52' rx='14' fill='#3b7bff' opacity='.4'/><rect x='45' y='103' width='52' height='52' rx='14' fill='#ffc34d' opacity='.4'/><rect x='103' y='103' width='52' height='52' rx='14' fill='#38e08a' opacity='.4'/></svg>`) },
 ];
 
 const $ = (s) => document.querySelector(s);
@@ -43,7 +76,7 @@ let roundsSinceAd = 0;
 function renderGrid(filter = 'all') {
   const grid = $('#grid');
   grid.innerHTML = '';
-  GAMES.filter((g) => filter === 'all' || g.filters.includes(filter)).forEach((g) => {
+  GAMES.filter((g) => filter === 'all' || g.filters.includes(filter)).sort((a, b) => !!a.soon - !!b.soon).forEach((g) => {
     const b = document.createElement('button');
     b.className = 'card' + (g.soon ? ' soon' : '');
     b.setAttribute('aria-label', g.soon ? `${g.name}, coming soon` : `Play ${g.name}`);
@@ -121,6 +154,9 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
 
+const live = GAMES.filter((g) => !g.soon);
+const levels = live.reduce((n, g) => n + (g.levels || 1), 0);
+$('#count').textContent = `${live.length} games · ${levels.toLocaleString()} levels`;
 renderGrid();
 updateNet();
 const start = location.hash.slice(1);
