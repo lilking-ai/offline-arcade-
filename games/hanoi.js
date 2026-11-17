@@ -1,6 +1,6 @@
 // Tower of Hanoi: move the whole stack to the right peg. Never put a big disc on a small one.
-// 8 levels (3–10 discs). Perfect solutions get 3 stars.
-import { levelBar } from './util.js';
+// Pick 3–10 discs. Perfect solutions get 3 stars.
+import { store } from './util.js';
 import { sfx, confetti, stars } from './fx.js';
 const MAX = 8;
 const COLORS = ['#ff4d5e', '#ff6a2b', '#ffc34d', '#38e08a', '#33d1e0', '#3b7bff', '#8b5cff', '#ff7ab6', '#e8e4da', '#9a98a6'];
@@ -8,7 +8,14 @@ const COLORS = ['#ff4d5e', '#ff6a2b', '#ffc34d', '#38e08a', '#33d1e0', '#3b7bff'
 export function mount(stage, { roundOver }) {
   let pegs, held, moves, done, discs, history;
   stage.innerHTML = '';
-  const lv = levelBar(stage, { key: 'hanoi', max: MAX, onChange: load });
+  const picker = document.createElement('div');
+  picker.className = 'disc-pick'; picker.setAttribute('role', 'group'); picker.setAttribute('aria-label', 'Number of discs');
+  picker.innerHTML = '<span>Discs</span>' + [3, 4, 5, 6, 7, 8, 9, 10].map((d) => `<button data-n="${d}">${d}</button>`).join('');
+  stage.appendChild(picker);
+  let chosen = store.get('hanoi-discs', 5);
+  const lv = { get level() { return chosen - 2; }, complete() {}, next() { if (chosen < 10) pick(chosen + 1); } };
+  function pick(d) { chosen = d; store.set('hanoi-discs', d); picker.querySelectorAll('[data-n]').forEach((b) => b.classList.toggle('on', Number(b.dataset.n) === d)); load(d - 2); }
+  picker.querySelectorAll('[data-n]').forEach((b) => b.addEventListener('click', () => pick(Number(b.dataset.n))));
   const wrap = document.createElement('div');
   wrap.className = 'stage';
   wrap.innerHTML = `
@@ -20,7 +27,7 @@ export function mount(stage, { roundOver }) {
     </div>
     <p class="hint">Tap a peg to lift its top disc, then tap where to drop it.</p>
     <div class="row-btns"><button class="btn" id="undo">Undo</button><button class="btn" id="restart">Restart</button></div>
-    <button class="btn primary" id="next" hidden>Next level</button>`;
+    <button class="btn primary" id="next" hidden>Try more discs</button>`;
   stage.appendChild(wrap);
   const el = (id) => wrap.querySelector('#' + id);
   const pegEls = [...wrap.querySelectorAll('[data-p]')];
@@ -74,6 +81,6 @@ export function mount(stage, { roundOver }) {
     el('undo').disabled = done || !history.length;
   }
   pegEls.forEach((b, p) => b.addEventListener('click', () => tap(p)));
-  load(lv.level);
+  pick(chosen);
   return () => {};
 }

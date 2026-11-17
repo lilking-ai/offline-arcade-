@@ -454,3 +454,8 @@ body::after {
 .hanoi2 .hbase { position: absolute; left: 8px; right: 8px; bottom: 8px; height: 18px; border-radius: 6px; background: linear-gradient(180deg, #c28a4f, #6b4423); box-shadow: 0 6px 12px rgba(0,0,0,.5); }
 .hanoi2 .goal { position: absolute; top: 14px; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--gold); opacity: .7; }
 .hanoi2 .nope { animation: shake .3s; }
+
+.disc-pick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.disc-pick span { font-weight: 800; color: var(--muted); margin-right: 4px; }
+.disc-pick button { min-width: 40px; min-height: 40px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); font-weight: 900; cursor: pointer; }
+.disc-pick button.on { background: var(--flare); color: #160700; border-color: var(--flare); }
