@@ -1,5 +1,5 @@
 // Offline Arcade — hub, routing, ads and offline support.
-import { ADS, AD_SECONDS, ROUNDS_BETWEEN_ADS } from './ads/ads.js';
+import { ADS, AD_SECONDS, ROUNDS_BETWEEN_ADS, ADS_ENABLED } from './ads/ads.js';
 
 const art = (bg, svg) =>
   `background:${bg};` +
@@ -159,6 +159,7 @@ window.addEventListener('popstate', () => { if (gameScreen.classList.contains('a
 let adIndex = 0, adTimer = null;
 
 function roundOver() {
+  if (!ADS_ENABLED) return;
   roundsSinceAd++;
   if (roundsSinceAd >= ROUNDS_BETWEEN_ADS) {
     roundsSinceAd = 0;
@@ -222,7 +223,7 @@ function updateNet() {
   net.textContent = online ? 'Online' : 'Offline mode';
   net.classList.toggle('off', !online);
   document.querySelectorAll('[data-ad="banner"]').forEach((slot) => {
-    slot.hidden = !online;
+    slot.hidden = !online || !ADS_ENABLED;
     slot.innerHTML = '<span class="ad-tag">AD</span> Banner ad · 320×50';
   });
 }

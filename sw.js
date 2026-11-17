@@ -1,5 +1,5 @@
 // Caches the whole app (games + ads) so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v7';
+const CACHE = 'offline-arcade-v8';
 const FILES = [
   './',
   './index.html',
@@ -20,7 +20,7 @@ const ADS = ['volt-1', 'volt-2', 'volt-3', 'kettlecrow-coffee', 'fizzr-energy', 
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(FILES).then(() => Promise.all(ADS.map((a) => c.add(a).catch(() => {})))))
+      .then((c) => c.addAll(FILES))
       .then(() => self.skipWaiting())
   );
 });
@@ -50,11 +50,24 @@ async function rangeResponse(request, cached) {
   });
 }
 
+// Online: always fetch the newest file (and refresh the offline copy).
+// Offline: use the saved copy. Videos use the cache first because they're big.
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   e.respondWith((async () => {
+    const isVideo = e.request.url.endsWith('.mp4');
     const cached = await caches.match(e.request, { ignoreSearch: true });
-    if (cached && e.request.headers.has('range')) return rangeResponse(e.request, cached);
-    return cached || fetch(e.request);
+    if (isVideo && cached) return e.request.headers.has('range') ? rangeResponse(e.request, cached) : cached;
+    try {
+      const fresh = await fetch(e.request, { cache: 'no-store' });
+      if (fresh.ok && fresh.status === 200 && new URL(e.request.url).origin === location.origin) {
+        const copy = fresh.clone();
+        caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
+      }
+      return fresh;
+    } catch (err) {
+      if (cached) return cached;
+      throw err;
+    }
   })());
 });

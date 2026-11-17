@@ -11,6 +11,9 @@
 export const AD_SECONDS = 30;
 
 // Show a full-screen ad after this many finished rounds.
+// Ads are switched OFF for now. Set ADS_ENABLED = true to turn them back on.
+export const ADS_ENABLED = false;
+
 export const ROUNDS_BETWEEN_ADS = 3;
 
 export const ADS = [
