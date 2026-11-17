@@ -1,5 +1,5 @@
 // Caches the whole app (games + ads) so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v8';
+const CACHE = 'offline-arcade-v9';
 const FILES = [
   './',
   './index.html',
@@ -13,7 +13,7 @@ const FILES = [
   './ads/ads.js',
   ...['util', 'xo', 'connect4', 'snake', 'checkers', 'pong', 'football', 'dots', 'memory', 'reaction',
     'g2048', 'minesweeper', 'sudoku', 'maze', 'words', 'simon', 'chess', 'ludo', 'gomoku', 'mancala',
-    'rps', 'flappy', 'breakout', 'whack', 'hangman', 'puzzle15', 'lightsout', 'hanoi'].map((g) => `./games/${g}.js`),
+    'fx', 'rps', 'flappy', 'breakout', 'whack', 'hangman', 'puzzle15', 'lightsout', 'hanoi'].map((g) => `./games/${g}.js`),
 ];
 const ADS = ['volt-1', 'volt-2', 'volt-3', 'kettlecrow-coffee', 'fizzr-energy', 'loopa-app'].map((a) => `./ads/${a}.mp4`);
 
