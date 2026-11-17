@@ -1,5 +1,5 @@
 // Caches the whole app (games + ads) so it works with no internet after the first visit.
-const CACHE = 'offline-arcade-v9';
+const CACHE = 'offline-arcade-v10';
 const FILES = [
   './',
   './index.html',
@@ -11,16 +11,18 @@ const FILES = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './ads/ads.js',
+  './profile.js',
+  './stats.js',
   ...['util', 'xo', 'connect4', 'snake', 'checkers', 'pong', 'football', 'dots', 'memory', 'reaction',
     'g2048', 'minesweeper', 'sudoku', 'maze', 'words', 'simon', 'chess', 'ludo', 'gomoku', 'mancala',
-    'fx', 'rps', 'flappy', 'breakout', 'whack', 'hangman', 'puzzle15', 'lightsout', 'hanoi'].map((g) => `./games/${g}.js`),
+    'fx', 'party', 'taprace', 'quickdraw', 'colormatch', 'stopbar', 'rps', 'flappy', 'breakout', 'whack', 'hangman', 'puzzle15', 'lightsout', 'hanoi'].map((g) => `./games/${g}.js`),
 ];
 const ADS = ['volt-1', 'volt-2', 'volt-3', 'kettlecrow-coffee', 'fizzr-energy', 'loopa-app'].map((a) => `./ads/${a}.mp4`);
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(FILES))
+      .then((c) => c.addAll(FILES).then(() => Promise.all(ADS.map((a) => c.add(a).catch(() => {})))))
       .then(() => self.skipWaiting())
   );
 });

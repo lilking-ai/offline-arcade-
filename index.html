@@ -27,7 +27,7 @@
           <span class="brand-big">ARCADE</span>
         </div>
       </div>
-      <span id="net" class="net" aria-live="polite"></span>
+      <div class="top-right"><span id="net" class="net" aria-live="polite"></span><button id="me" class="me-btn" aria-label="Your profile"></button></div>
     </header>
 
     <div class="install" id="install" hidden>
@@ -47,6 +47,7 @@
 
     <nav class="filters" aria-label="Filter games">
       <button class="chip on" data-filter="all">All</button>
+      <button class="chip" data-filter="party">Party · 4P</button>
       <button class="chip" data-filter="2p">2 Player</button>
       <button class="chip" data-filter="solo">Solo</button>
       <button class="chip" data-filter="board">Board</button>
@@ -56,7 +57,6 @@
     <p id="count" class="count"></p>
     <section id="grid" class="grid" aria-label="Games"></section>
 
-    <div class="ad-slot" data-ad="banner"></div>
   </main>
 
   <!-- GAME -->

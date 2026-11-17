@@ -1,5 +1,7 @@
 // Offline Arcade — hub, routing, ads and offline support.
-import { ADS, AD_SECONDS, ROUNDS_BETWEEN_ADS, ADS_ENABLED } from './ads/ads.js';
+import { ADS, AD_SECONDS, ROUNDS_BETWEEN_ADS, ADS_ENABLED, BANNER_ENABLED, BANNER_SECONDS, SKIP_CODE_SHA256 } from './ads/ads.js';
+import { initProfile, openSignUp, avatarHTML } from './profile.js';
+import { initStats, countGame } from './stats.js';
 
 const art = (bg, svg) =>
   `background:${bg};` +
@@ -7,6 +9,18 @@ const art = (bg, svg) =>
   `background-size:cover;background-position:center;`;
 
 const GAMES = [
+  { id: 'taprace', name: 'Tap Race', tag: '2–4 players · party', filters: ['2p', 'party'],
+    style: art('radial-gradient(circle at 50% 50%, #2a1030, #0d0e16 75%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='18' y='18' width='70' height='70' rx='18' fill='#3b7bff'/><rect x='18' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='18' width='70' height='70' rx='18' fill='#ffc34d'/><rect x='112' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='18' y='162' width='70' height='70' rx='18' fill='#ff4d5e'/><rect x='18' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='162' width='70' height='70' rx='18' fill='#38e08a'/><rect x='112' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='40' y='104' width='120' height='10' rx='5' fill='#ffffff22'/><rect x='40' y='122' width='120' height='10' rx='5' fill='#ffffff22'/><circle cx='120' cy='109' r='9' fill='#ff4d5e'/><circle cx='80' cy='127' r='9' fill='#3b7bff'/><rect x='160' y='98' width='6' height='40' fill='#fff'/></svg>`) },
+  { id: 'quickdraw', name: 'Quick Draw', tag: '2–4 players · party', filters: ['2p', 'party'],
+    style: art('radial-gradient(circle at 50% 50%, #0f3d2a, #0d0e16 75%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='18' y='18' width='70' height='70' rx='18' fill='#3b7bff'/><rect x='18' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='18' width='70' height='70' rx='18' fill='#ffc34d'/><rect x='112' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='18' y='162' width='70' height='70' rx='18' fill='#ff4d5e'/><rect x='18' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='162' width='70' height='70' rx='18' fill='#38e08a'/><rect x='112' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><circle cx='100' cy='125' r='30' fill='#38e08a'/><circle cx='100' cy='125' r='44' fill='none' stroke='#38e08a' stroke-width='3' opacity='.4'/></svg>`) },
+  { id: 'colormatch', name: 'Color Match', tag: '2–4 players · party', filters: ['2p', 'party'],
+    style: art('radial-gradient(circle at 50% 50%, #2a1408, #0d0e16 75%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='18' y='18' width='70' height='70' rx='18' fill='#3b7bff'/><rect x='18' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='18' width='70' height='70' rx='18' fill='#ffc34d'/><rect x='112' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='18' y='162' width='70' height='70' rx='18' fill='#ff4d5e'/><rect x='18' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='162' width='70' height='70' rx='18' fill='#38e08a'/><rect x='112' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><circle cx='100' cy='125' r='32' fill='#ffc34d'/><circle cx='90' cy='115' r='9' fill='#fff' opacity='.5'/></svg>`) },
+  { id: 'stopbar', name: 'Stop the Bar', tag: '2–4 players · party', filters: ['2p', 'party'],
+    style: art('radial-gradient(circle at 50% 50%, #121f44, #0d0e16 75%)',
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 250'><rect x='18' y='18' width='70' height='70' rx='18' fill='#3b7bff'/><rect x='18' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='18' width='70' height='70' rx='18' fill='#ffc34d'/><rect x='112' y='18' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='18' y='162' width='70' height='70' rx='18' fill='#ff4d5e'/><rect x='18' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='112' y='162' width='70' height='70' rx='18' fill='#38e08a'/><rect x='112' y='162' width='70' height='14' rx='7' fill='#fff' opacity='.25'/><rect x='70' y='96' width='16' height='58' rx='5' fill='#ffffff22'/><rect x='70' y='122' width='16' height='32' rx='5' fill='#ff4d5e'/><rect x='92' y='96' width='16' height='58' rx='5' fill='#ffffff22'/><rect x='92' y='112' width='16' height='42' rx='5' fill='#3b7bff'/><rect x='114' y='96' width='16' height='58' rx='5' fill='#ffffff22'/><rect x='114' y='118' width='16' height='36' rx='5' fill='#38e08a'/><rect x='64' y='110' width='72' height='3' fill='#fff'/></svg>`) },
   {
     id: 'xo', name: 'XO', tag: '2 players · vs CPU', filters: ['2p', 'solo', 'board'],
     style: art('radial-gradient(circle at 70% 30%, #5a1d08, #0d0e16 70%)',
@@ -140,6 +154,7 @@ async function openGame(id) {
   gameScreen.classList.add('active');
   stage.innerHTML = '';
   cleanup = mod.mount(stage, { roundOver });
+  countGame(g.id, g.name);
   history.pushState({ game: id }, '', `#${id}`);
 }
 
@@ -159,7 +174,7 @@ window.addEventListener('popstate', () => { if (gameScreen.classList.contains('a
 let adIndex = 0, adTimer = null;
 
 function roundOver() {
-  if (!ADS_ENABLED) return;
+  if (!ADS_ENABLED || adsRemoved()) return;
   roundsSinceAd++;
   if (roundsSinceAd >= ROUNDS_BETWEEN_ADS) {
     roundsSinceAd = 0;
@@ -264,5 +279,76 @@ const levels = live.reduce((n, g) => n + (g.levels || 1), 0);
 $('#count').textContent = `${live.length} games · ${levels.toLocaleString()} levels`;
 renderGrid();
 updateNet();
+
+// ---------- small banner ad + password to remove ads ----------
+function adsRemoved() { try { return localStorage.getItem('oa-no-ads') === '1'; } catch (e) { return false; } }
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+let bannerIdx = 0, bannerTimer = null;
+function setupBanner() {
+  const old = document.querySelector('.mini-ad');
+  if (old) old.remove();
+  clearInterval(bannerTimer);
+  document.body.classList.remove('has-ad');
+  if (!BANNER_ENABLED || adsRemoved() || !ADS.length) return;
+  const bar = document.createElement('div');
+  bar.className = 'mini-ad';
+  bar.innerHTML = `<a class="mini-link" target="_blank" rel="noopener"><span class="mini-media"></span><span class="mini-text"><b></b><small><span class="ad-tag">AD</span> Sponsored</small></span></a><button class="mini-x" aria-label="Remove ads">✕</button>`;
+  document.body.appendChild(bar);
+  document.body.classList.add('has-ad');
+  const show = () => {
+    const ad = ADS[bannerIdx++ % ADS.length];
+    const media = bar.querySelector('.mini-media'), link = bar.querySelector('.mini-link');
+    media.innerHTML = '';
+    bar.querySelector('.mini-text b').textContent = ad.name || 'Sponsored';
+    if (ad.link) link.href = ad.link; else link.removeAttribute('href');
+    if (ad.type === 'video') {
+      const v = document.createElement('video');
+      Object.assign(v, { src: `ads/${ad.src}`, muted: true, loop: true, playsInline: true, autoplay: true });
+      v.setAttribute('playsinline', ''); v.setAttribute('muted', '');
+      media.appendChild(v); v.play().catch(() => {});
+    } else {
+      const img = document.createElement('img'); img.src = `ads/${ad.src}`; img.alt = 'Advertisement'; media.appendChild(img);
+    }
+  };
+  show();
+  bannerTimer = setInterval(show, BANNER_SECONDS * 1000);
+  bar.querySelector('.mini-x').addEventListener('click', askCode);
+}
+function askCode() {
+  const wrap = document.createElement('div');
+  wrap.className = 'code-wrap';
+  wrap.innerHTML = `<form class="code-box" role="dialog" aria-label="Remove ads">
+      <h3>Remove ads</h3>
+      <p class="hint">Enter the code to turn ads off on this device.</p>
+      <input type="password" inputmode="numeric" autocomplete="off" id="ad-code" aria-label="Code">
+      <p class="code-err" id="code-err"></p>
+      <div class="row-btns"><button type="button" class="btn" id="code-cancel">Cancel</button><button class="btn primary">Unlock</button></div>
+    </form>`;
+  document.body.appendChild(wrap);
+  const input = wrap.querySelector('#ad-code');
+  setTimeout(() => input.focus(), 50);
+  wrap.querySelector('#code-cancel').addEventListener('click', () => wrap.remove());
+  wrap.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if ((await sha256(input.value.trim())) === SKIP_CODE_SHA256) {
+      try { localStorage.setItem('oa-no-ads', '1'); } catch (err) {}
+      wrap.remove(); setupBanner(); updateNet();
+    } else {
+      wrap.querySelector('#code-err').textContent = 'Wrong code';
+      input.value = ''; wrap.querySelector('form').classList.remove('shake'); void wrap.offsetWidth; wrap.querySelector('form').classList.add('shake');
+    }
+  });
+}
+setupBanner();
+
+initStats();
+
+// ---------- profile ----------
+const showMe = (p) => { $('#me').innerHTML = avatarHTML(p, 36); };
+initProfile(showMe);
+$('#me').addEventListener('click', () => openSignUp(showMe));
 const start = location.hash.slice(1);
 if (start) openGame(start);

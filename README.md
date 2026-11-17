@@ -27,13 +27,17 @@ Then open the address it prints. Service workers need `http://localhost` or HTTP
 
 ## Ads
 
-Full-screen ads show after every 3 finished rounds and **run for 30 seconds. Players can't skip them.**
+- A **small banner ad** sits at the bottom of the screen and plays your ad videos (muted), switching every 30 seconds.
+- Tap the **✕** on the banner and enter the code to turn ads off on that device.
+- Full-screen 30-second ads are turned **off** (`ADS_ENABLED` in `ads/ads.js`).
 
-To add your own ads:
-1. Put your ad files (`.mp4`, `.jpg`, `.png`) in the `ads/` folder.
-2. List them in `ads/ads.js`, for example `{ type: 'video', src: 'ad1.mp4', link: 'https://your-site.com' }`.
+## Visitor stats
 
-Change `AD_SECONDS` or `ROUNDS_BETWEEN_ADS` in `ads/ads.js` to adjust. Ads are stored inside the app, so they play offline too.
+The app uses [GoatCounter](https://www.goatcounter.com) (free, no cookies). Put your GoatCounter code in `stats.js`, and your dashboard shows visitors, countries, devices and the most-played games.
+
+## Profile
+
+Players pick a nickname and avatar the first time ("Continue as …"), and get a "Welcome back" banner after that. It's saved on the device.
 
 ## Add a game
 
